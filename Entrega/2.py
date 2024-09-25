@@ -31,7 +31,7 @@ def train_test_split(X, y, test_size=0.2):
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 class DecisionTree:
-    def __init__(self, max_depth=None, min_samples_split=2):
+    def __init__(self, max_depth=None, min_samples_split=2):  # Corrigir para __init__
         self.max_depth = max_depth
         self.min_samples_split = min_samples_split
         self.tree = None
@@ -148,16 +148,23 @@ def f1_score(y_true, y_pred):
     r = recall(y_true, y_pred)
     return 2 * (p * r) / (p + r)
 
-# Instanciar e treinar o modelo
+# Treinar o modelo e fazer previsões no conjunto de teste
 tree = DecisionTree(max_depth=10)
 tree.fit(X_train, y_train)
-
-# Fazer previsões no conjunto de teste
 y_pred = tree.predict(X_test)
 
-# Calcular e exibir as métricas
-print("Matriz de Confusão:\n", confusion_matrix(y_test, y_pred))
-print("Acurácia:", accuracy(y_test, y_pred))
-print("Precisão:", precision(y_test, y_pred))
-print("Recall:", recall(y_test, y_pred))
-print("F1-score:", f1_score(y_test, y_pred))
+# Avaliar o desempenho
+acc = accuracy(y_test, y_pred)
+prec = np.nanmean(precision(y_test, y_pred))  # Evitar divisões por zero
+rec = np.nanmean(recall(y_test, y_pred))
+f1 = np.nanmean(f1_score(y_test, y_pred))
+
+# Calcular e exibir a matriz de confusão
+cm = confusion_matrix(y_test, y_pred)
+
+print("Matriz de Confusão:")
+print(cm)
+print(f"Acurácia: {acc}")
+print(f"Precisão: {prec}")
+print(f"Recall: {rec}")
+print(f"F1-score: {f1}")
